@@ -298,10 +298,6 @@ export default {
 </script>
 
 <style lang="scss" module>
-    .c-cookieBanner--is-hidden {
-        display: none;
-    }
-
     .c-cookieBanner-card {
         position: absolute;
         bottom: 0;
