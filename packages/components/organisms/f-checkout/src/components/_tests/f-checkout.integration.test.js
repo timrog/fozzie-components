@@ -6,7 +6,7 @@ import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
 import { VueI18n } from '@justeat/f-globalisation';
 import {
-    defaultCheckoutState, defaultCheckoutActions, i18n, createStore, $logger
+    defaultCheckoutState, i18n, createStore, $logger
 } from './helpers/setup';
 
 import Checkout from '../Checkout.vue';
@@ -102,53 +102,23 @@ describe('Checkout API service', () => {
         expect(wrapper.exists()).toBe(true);
     });
 
-    it('responds with 201 when request is made with details in place', async () => {
-        // Arrange
+    it('should respond with 201 when request to checkout is made with user logged in', async () => {
+        // Arrange & Act
         const div = document.createElement('div');
         document.body.appendChild(div);
         const wrapper = mount(Checkout, {
-            propsData,
+            store: createStore({ ...defaultCheckoutState, isLoggedIn: true }),
             i18n,
-            store: createStore(),
             localVue,
+            propsData,
             attachTo: div
         });
 
         mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, wrapper.store, 201);
-
-        // Act
-        await wrapper.vm.loadCheckout();
         await flushPromises();
 
         // Assert
         expect(wrapper.emitted(EventNames.CheckoutGetSuccess).length).toBe(1);
-    });
-
-    it('responds with 401 when placing an order has failed', async () => {
-        // Arrange
-        const div = document.createElement('div');
-        document.body.appendChild(div);
-        const wrapper = mount(Checkout, {
-            store: createStore({
-                ...defaultCheckoutState,
-                errors: [message]
-            }),
-            i18n,
-            localVue,
-            propsData,
-            mocks: {
-                $logger
-            }
-        });
-
-        mockFactory.setupMockResponse(httpVerbs.POST, propsData.updateCheckoutUrl, wrapper.store, 409);
-
-        // Act
-        await wrapper.vm.handleNonFulfillableCheckout();
-        await flushPromises();
-
-        // Assert
-        expect(wrapper.emitted(EventNames.CheckoutUpdateFailure).length).toBe(1);
     });
 
     it('responds with 201 when request to get basket is made', async () => {
