@@ -6,15 +6,18 @@ import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
 import { VueI18n } from '@justeat/f-globalisation';
 import {
-    defaultCheckoutState, i18n, createStore, $logger
+    defaultCheckoutState, i18n, createStore, defaultCheckoutActions, $logger
 } from './helpers/setup';
+import {
+    ANALYTICS_ERROR_CODE_INVALID_MODEL_STATE,
+    CHECKOUT_METHOD_DELIVERY,
+    CHECKOUT_METHOD_COLLECTION,
+    ERROR_CODE_FULFILMENT_TIME_INVALID,
+    TENANT_MAP
+} from '../../constants';
 
 import Checkout from '../Checkout.vue';
 import EventNames from '../../event-names';
-
-import {
-    ERROR_CODE_FULFILMENT_TIME_INVALID
-} from '../../constants';
 
 const {
     mockFactory,
@@ -57,11 +60,13 @@ const propsData = {
     otacToAuthExchanger
 };
 
-const message = {
-    code: ERROR_CODE_FULFILMENT_TIME_INVALID,
-    shouldRedirectToMenu: true,
-    shouldShowInDialog: true
-};
+const alertCode = 'Something went wrong, please try again later';
+
+// const message = {
+//     code: ERROR_CODE_FULFILMENT_TIME_INVALID,
+//     shouldRedirectToMenu: true,
+//     shouldShowInDialog: true
+// };
 
 // const setGuestFormFieldValues = wrapper => {
 //     wrapper.find('[data-test-id="formfield-guest-first-name-input"]').setValue(defaultCheckoutState.customer.firstName);
@@ -96,8 +101,6 @@ describe('Checkout API service', () => {
             attachTo: div
         });
 
-        mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, wrapper.store, 201);
-
         // Assert
         expect(wrapper.exists()).toBe(true);
     });
@@ -114,12 +117,32 @@ describe('Checkout API service', () => {
             attachTo: div
         });
 
-        mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, wrapper.store, 201);
+        mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
         await flushPromises();
 
         // Assert
         expect(wrapper.emitted(EventNames.CheckoutGetSuccess).length).toBe(1);
     });
+
+    // it('should respond with 400 when request to checkout is made with user logged in', async () => {
+    //     // Arrange & Act
+    //     const div = document.createElement('div');
+    //     document.body.appendChild(div);
+    //     const wrapper = mount(Checkout, {
+    //         store: createStore(defaultCheckoutState, { ...defaultCheckoutActions, getCheckout: jest.fn(async () => Promise.reject()) }),
+    //         i18n,
+    //         localVue,
+    //         propsData,
+    //         mocks: {
+    //             $logger
+    //         },
+    //         attachTo: div
+    //     });
+    //     await flushPromises();
+
+    //     // Assert
+    //     expect(wrapper.emitted(EventNames.CheckoutGetFailure).length).toBe(1);
+    // });
 
     it('responds with 201 when request to get basket is made', async () => {
         // Arrange
@@ -140,5 +163,85 @@ describe('Checkout API service', () => {
         // Assert
         expect(wrapper.emitted(EventNames.CheckoutBasketGetSuccess).length).toBe(1);
         expect(wrapper.emitted(EventNames.CheckoutBasketGetFailure)).toBeUndefined();
+    });
+
+    // it('responds with a failure when request to get basket has failed', async () => {
+    //     // Arrange
+    //     // const error = new Error('Doh exception man!');
+    //     const div = document.createElement('div');
+    //     document.body.appendChild(div);
+    //     const wrapper = mount(Checkout, {
+    //         store: createStore({ ...defaultCheckoutState, isLoggedIn: true }),
+    //         i18n,
+    //         localVue,
+    //         propsData,
+    //         mocks: {
+    //             $logger
+    //         },
+    //         // data () {
+    //         //     return {
+    //         //         hasCheckoutLoadedSuccessfully: false
+    //         //     };
+    //         // }
+    //     });
+
+    //     mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
+
+    //     // Act
+    //     await wrapper.vm.loadBasket();
+    //     await flushPromises();
+
+    //     // Assert
+    //     expect(wrapper.emitted(EventNames.CheckoutBasketGetFailure).length).toBe(1);
+    // });
+
+
+    it('should return `true` for delivery order without address when user is logged in', async () => {
+        // Arrange
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+        const wrapper = mount(Checkout, {
+            store: createStore({ ...defaultCheckoutState, isLoggedIn: true }),
+            i18n,
+            localVue,
+            propsData,
+            attachTo: div
+        });
+
+        mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
+
+        // Act
+        await wrapper.vm.loadAddress();
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.emitted(EventNames.CheckoutAddressGetSuccess).length).toBe(1);
+    });
+
+    it('should return `true` for delivery order without address when user is logged in', async () => {
+        // Arrange
+        const error = new Error('Doh exception man!');
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+        const store = createStore(defaultCheckoutState, { ...defaultCheckoutActions, getAddress: jest.fn(async () => Promise.reject(error)) });
+        const wrapper = mount(Checkout, {
+            store,
+            i18n,
+            localVue,
+            propsData,
+            mocks: {
+                $logger
+            },
+            attachTo: div
+        });
+
+        mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
+
+        // Act
+        await wrapper.vm.loadAddress();
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.emitted(EventNames.CheckoutAddressGetFailure).length).toBe(1);
     });
 });
