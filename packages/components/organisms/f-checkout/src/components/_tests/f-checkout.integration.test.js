@@ -1,4 +1,4 @@
-import httpModule from '@justeat/f-http';
+// import httpModule from '@justeat/f-http';
 import {
     mount, createLocalVue
 } from '@vue/test-utils';
@@ -8,21 +8,15 @@ import { VueI18n } from '@justeat/f-globalisation';
 import {
     defaultCheckoutState, i18n, createStore, defaultCheckoutActions, $logger
 } from './helpers/setup';
-import {
-    ANALYTICS_ERROR_CODE_INVALID_MODEL_STATE,
-    CHECKOUT_METHOD_DELIVERY,
-    CHECKOUT_METHOD_COLLECTION,
-    ERROR_CODE_FULFILMENT_TIME_INVALID,
-    TENANT_MAP
-} from '../../constants';
+// import { config } from '../../../test/constants/comsumer';
 
 import Checkout from '../Checkout.vue';
 import EventNames from '../../event-names';
 
-const {
-    mockFactory,
-    httpVerbs
-} = httpModule;
+// const {
+//     mockFactory,
+//     httpVerbs
+// } = httpModule;
 
 const localVue = createLocalVue();
 
@@ -60,7 +54,7 @@ const propsData = {
     otacToAuthExchanger
 };
 
-const alertCode = 'Something went wrong, please try again later';
+// const alertCode = 'Something went wrong, please try again later';
 
 // const message = {
 //     code: ERROR_CODE_FULFILMENT_TIME_INVALID,
@@ -79,13 +73,13 @@ const alertCode = 'Something went wrong, please try again later';
 //     wrapper.find('[data-test-id="formfield-address-postcode-input"]').setValue(defaultCheckoutState.address.postcode);
 // };
 
-// const setFormFieldValues = wrapper => {
-//     wrapper.find('[data-test-id="formfield-mobile-number-input"]').setValue(defaultCheckoutState.customer.mobileNumber);
-//     wrapper.find('[data-test-id="formfield-address-line-1-input"]').setValue(defaultCheckoutState.address.line1);
-//     wrapper.find('[data-test-id="formfield-address-line-2-input"]').setValue(defaultCheckoutState.address.line2);
-//     wrapper.find('[data-test-id="formfield-address-locality-input"]').setValue(defaultCheckoutState.address.locality);
-//     wrapper.find('[data-test-id="formfield-address-postcode-input"]').setValue(defaultCheckoutState.address.postcode);
-// };
+const setFormFieldValues = wrapper => {
+    wrapper.find('[data-test-id="formfield-mobile-number-input"]').setValue(defaultCheckoutState.customer.mobileNumber);
+    wrapper.find('[data-test-id="formfield-address-line-1-input"]').setValue(defaultCheckoutState.address.line1);
+    wrapper.find('[data-test-id="formfield-address-line-2-input"]').setValue(defaultCheckoutState.address.line2);
+    wrapper.find('[data-test-id="formfield-address-locality-input"]').setValue(defaultCheckoutState.address.locality);
+    wrapper.find('[data-test-id="formfield-address-postcode-input"]').setValue(defaultCheckoutState.address.postcode);
+};
 
 
 describe('Checkout API service', () => {
@@ -106,7 +100,7 @@ describe('Checkout API service', () => {
     });
 
     it('should respond with 201 when request to checkout is made with user logged in', async () => {
-        // Arrange & Act
+        // Arrange
         const div = document.createElement('div');
         document.body.appendChild(div);
         const wrapper = mount(Checkout, {
@@ -117,11 +111,15 @@ describe('Checkout API service', () => {
             attachTo: div
         });
 
-        mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
+        setFormFieldValues(wrapper);
+
+        // Act
+        // mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, defaultCheckoutState, 201, EventNames.CheckoutGetSuccess);
         await flushPromises();
 
         // Assert
         expect(wrapper.emitted(EventNames.CheckoutGetSuccess).length).toBe(1);
+        expect(wrapper.emitted(EventNames.CheckoutAvailableFulfilmentGetSuccess).length).toBe(1);
     });
 
     // it('should respond with 400 when request to checkout is made with user logged in', async () => {
@@ -144,6 +142,37 @@ describe('Checkout API service', () => {
     //     expect(wrapper.emitted(EventNames.CheckoutGetFailure).length).toBe(1);
     // });
 
+    it('should respond with 201 when a successful order request to payments is made', async () => {
+        // Arrange
+        const basketId = 'myBasketId-v1';
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+        const wrapper = mount(Checkout, {
+            store: createStore({
+                ...defaultCheckoutState,
+                basket: {
+                    id: basketId
+                }
+            }),
+            i18n,
+            localVue,
+            propsData,
+            attachTo: div,
+            mocks: {
+                $logger
+            }
+        });
+
+        // Act
+        // mockFactory.setupMockResponse(httpVerbs.POST, propsData.paymentPageUrlPrefix, defaultCheckoutState, 201);
+        await wrapper.vm.submitOrder();
+        await flushPromises();
+
+        // Assert
+        expect(wrapper.emitted(EventNames.CheckoutSuccess).length).toBe(1);
+        expect(wrapper.emitted(EventNames.CheckoutPlaceOrderSuccess).length).toBe(1);
+    });
+
     it('responds with 201 when request to get basket is made', async () => {
         // Arrange
         const div = document.createElement('div');
@@ -155,9 +184,9 @@ describe('Checkout API service', () => {
             propsData,
             attachTo: div
         });
-        mockFactory.setupMockResponse(httpVerbs.GET, propsData.getBasketUrl, defaultCheckoutState, 201);
 
         // Act
+        // mockFactory.setupMockResponse(httpVerbs.GET, propsData.getBasketUrl, defaultCheckoutState, 201);
         await flushPromises();
 
         // Assert
@@ -165,35 +194,30 @@ describe('Checkout API service', () => {
         expect(wrapper.emitted(EventNames.CheckoutBasketGetFailure)).toBeUndefined();
     });
 
-    // it('responds with a failure when request to get basket has failed', async () => {
-    //     // Arrange
-    //     // const error = new Error('Doh exception man!');
-    //     const div = document.createElement('div');
-    //     document.body.appendChild(div);
-    //     const wrapper = mount(Checkout, {
-    //         store: createStore({ ...defaultCheckoutState, isLoggedIn: true }),
-    //         i18n,
-    //         localVue,
-    //         propsData,
-    //         mocks: {
-    //             $logger
-    //         },
-    //         // data () {
-    //         //     return {
-    //         //         hasCheckoutLoadedSuccessfully: false
-    //         //     };
-    //         // }
-    //     });
+    it('responds with a failure when request to get basket has failed', async () => {
+        // Arrange
+        // const error = new Error('Doh exception man!');
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+        const wrapper = mount(Checkout, {
+            store: createStore(defaultCheckoutState, { ...defaultCheckoutActions, getBasket: jest.fn(async () => Promise.reject()) }),
+            i18n,
+            localVue,
+            propsData,
+            mocks: {
+                $logger
+            }
+        });
 
-    //     mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
+        // Act
+        // mockFactory.setupMockResponse(httpVerbs.GET, propsData.getBasketUrl, 201);
+        // await wrapper.vm.loadBasket();
+        await flushPromises();
 
-    //     // Act
-    //     await wrapper.vm.loadBasket();
-    //     await flushPromises();
-
-    //     // Assert
-    //     expect(wrapper.emitted(EventNames.CheckoutBasketGetFailure).length).toBe(1);
-    // });
+        // Assert
+        // console.log('YOOOOOOO', wrapper.emitted());
+        expect(wrapper.emitted(EventNames.CheckoutBasketGetFailure).length).toBe(1);
+    });
 
 
     it('should return `true` for delivery order without address when user is logged in', async () => {
@@ -208,9 +232,8 @@ describe('Checkout API service', () => {
             attachTo: div
         });
 
-        mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
-
         // Act
+        // mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
         await wrapper.vm.loadAddress();
         await flushPromises();
 
@@ -235,13 +258,33 @@ describe('Checkout API service', () => {
             attachTo: div
         });
 
-        mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
-
         // Act
+        // mockFactory.setupMockResponse(httpVerbs.GET, propsData.getCheckoutUrl, 201);
         await wrapper.vm.loadAddress();
         await flushPromises();
 
         // Assert
         expect(wrapper.emitted(EventNames.CheckoutAddressGetFailure).length).toBe(1);
     });
+
+    // it('responds with 201 when request is made to login', async () => {
+    //     // Arrange & Act
+    //     const div = document.createElement('div');
+    //     document.body.appendChild(div);
+    //     const wrapper = mount(Checkout, {
+    //         store: createStore(),
+    //         i18n,
+    //         localVue,
+    //         propsData,
+    //         attachTo: div
+    //     });
+
+    //     mockFactory.setupMockResponse(httpVerbs.POST, propsData.loginUrl, 201);
+    //     // const loginLink = wrapper.find("[data-test-id='switch-user-link']");
+    //     // loginLink.simulate('click');
+    //     await flushPromises();
+
+    //     // Assert
+    //     expect(wrapper.emitted(EventNames.CheckoutVisitLoginPage).length).toBe(1);
+    // });
 });
