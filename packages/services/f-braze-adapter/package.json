@@ -35,7 +35,7 @@
     "extends @justeat/browserslist-config-fozzie"
   ],
   "dependencies": {
-    "appboy-web-sdk": "2.5.2",
+    "@braze/web-sdk": "3.3.0",
     "date-fns": "2.16.1",
     "lodash.findindex": "4.6.0",
     "lodash.orderby": "4.6.0",

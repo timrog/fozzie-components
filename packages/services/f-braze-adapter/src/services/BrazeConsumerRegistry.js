@@ -30,16 +30,15 @@ class BrazeConsumerRegistry {
         enableLogging
     }) {
         if (!registryInstance) {
-            const dispatcher = new BrazeDispatcher(sessionTimeout);
+            const dispatcher = new BrazeDispatcher({
+                sessionTimeout,
+                apiKey,
+                userId,
+                enableLogging
+            });
 
             registryInstance = new BrazeConsumerRegistry(dispatcher);
         }
-
-        await registryInstance.dispatcher.configure({
-            apiKey,
-            userId,
-            enableLogging
-        });
 
         return registryInstance;
     }
