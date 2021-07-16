@@ -3,6 +3,65 @@
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+v3.45.0
+------------------------------
+*July 14, 2021*
+
+### Added
+- `Storybook - Run Currently Open Story File` command in `launch.json`
+
+
+v3.44.6
+------------------------------
+*July 12, 2021*
+
+### Fixed
+- A few linting and formatting issues across files.
+
+
+v3.44.5
+------------------------------
+*July 7, 2021*
+
+### Fixed
+- Build all packages when running bundlewatch
+
+v3.44.4
+------------------------------
+*July 6, 2021*
+
+## Fix
+- Removed Bundlewatch comparison to master
+
+v3.44.3
+------------------------------
+*July 6, 2021*
+
+## Fix
+- Fix Bundlewatch fails
+
+v3.44.2
+------------------------------
+*July 5, 2021*
+
+## Fix
+- Fix CircleCI lint error when building one component.
+
+v3.44.1
+------------------------------
+*July 2, 2021*
+
+## Fixed
+- Issue where Bundlewatch fails on master as no packages have changed.
+
+
+v3.44.0
+------------------------------
+*July 1, 2021*
+
+## Changed
+- Bundlewatch to utilise lerna
+
 
 v3.43.0
 ------------------------------
