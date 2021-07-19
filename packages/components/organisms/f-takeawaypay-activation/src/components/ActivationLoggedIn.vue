@@ -19,11 +19,11 @@
             <f-button
                 :disabled="activationInProgress"
                 :is-loading="activationInProgress"
-                v-on:click="activate"
                 data-test-id="takeawaypay-activation-activate-button"
                 button-type="primary"
                 button-size="large"
-                is-full-width>
+                is-full-width
+                @click="activate">
                 {{ $t('actions.activateTakeawayPay') }}
             </f-button>
 
