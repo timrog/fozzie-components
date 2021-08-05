@@ -95,7 +95,7 @@ export const checkoutRequests = {
     getBasketDelivery: {
         path: '/get-basket-delivery.json',
         method: methods.get,
-        status: responses.forbidden
+        status: responses.ok
     },
     getBasketCollection: {
         path: '/get-basket-collection.json',
@@ -175,37 +175,24 @@ export const checkoutRequests = {
 };
 
 async function testCheckoutSetup ({path, method, status}) {
+    const methodName = method.charAt(0).toUpperCase() + method.slice(1);
+    const functionName = `on${methodName}`
+    const mocked = mock[functionName](path);
 
     if (status === 'timeout') {
-        switch (method) {
-            case 'get':
-                mock.onGet(path).timeout();
-                break;
-            case 'post':
-                mock.onGet(path).timeout();
-                break;
-        }
-        return;
-    }
-
-    const payload = await import(`.${path}`);
-
-    switch (method) {
-        case 'get':
-            mock.onGet(path).reply(status, payload);
-            return;
-        case 'post':
-            mock.onGet(path).reply(status, payload);
-            return;
+        mocked.timeout();
+    } else {
+        const payload = await import(`.${path}`);
+        mocked.reply(status, payload);
     }
 }
 
- function passThroughAny () {
+function passThroughAny () {
     mock.onAny().passThrough();
 }
 
-export default async function initialise() {
-
+export async function initialise() {
+    console.log('here')
     const props = Object.entries(checkoutRequests);
 
     for (let i = 0; i < props.length; i++) {

@@ -3,18 +3,17 @@ import Vuex from 'vuex';
 import { select, boolean } from '@storybook/addon-knobs';
 import { withA11y } from '@storybook/addon-a11y';
 import { locales } from '@justeat/storybook/constants/globalisation';
+import { checkoutRequests, initialise } from '../src/demo/checkoutMock';
 
 import VueCheckout from '../src/components/Checkout.vue';
 import fCheckoutModule from '../src/store/checkout.module';
 import fCheckoutAnalyticsModule from '../src/store/checkoutAnalytics.module';
 import fCheckoutExperimentationModule from '../src/store/checkoutExperimentation.module';
-import CheckoutMock, {checkoutRequests, initialise} from '../src/demo/checkoutMock';
+
+initialise();
 
 Vue.use(Vuex);
-
 const paymentPageUrlPrefix = '#/pay'; // Adding the "#" so we don't get redirect out of the component in Storybook
-
-
 const restraurantNotTakingOrders = 'Restaurant Not Taking Orders Issue (Response from server but order not fulfillable)';
 const additionalItemsRequired = 'Additional Items Required Issue (Response from server but order not fulfillable)';
 const updateCheckoutAccessForbidden = 'Access Forbidden (Response from server is 403)';
@@ -78,13 +77,12 @@ export const CheckoutComponent = () => ({
     components: { VueCheckout },
     data () {
         return {
-            checkoutRequests,
-            createGuest: checkoutRequests.createGuest.path,
-            getAddress: checkoutRequests.getAddress.path,
+            createGuestUrl: checkoutRequests.createGuest.path,
+            getAddressUrl: checkoutRequests.getAddress.path,
             loginUrl: '/login',
             paymentPageUrlPrefix,
-            getGeoLocation: checkoutRequests.getGeoLocation.path,
-            getCustomer: checkoutRequests.getCustomer.path
+            getGeoLocationUrl: checkoutRequests.getGeoLocation.path,
+            getCustomerUrl: checkoutRequests.getCustomer.path
         };
     },
     props: {
@@ -123,6 +121,7 @@ export const CheckoutComponent = () => ({
 
     computed: {
         getCheckoutUrl () {
+            console.log('crecs', this.createGuestUrl);
             if (this.fulfilmentTimeSelection) {
                 return `/checkout-${this.serviceType}-${this.fulfilmentTimeSelection}.json`;
             }
@@ -160,6 +159,11 @@ export const CheckoutComponent = () => ({
         }
     },
 
+    async beforeCreate () {
+        console.log('here sssa');
+        await initialise();
+    },
+
     methods: {
         otacToAuthExchanger () {
             return mockAuthToken;
@@ -174,30 +178,24 @@ export const CheckoutComponent = () => ({
         }
     }),
 
-    async beforeCreate() {
-        await initialise();
-    },
-
-    template: function () {
-        console.dir(checkoutRequests);
-        return '<vue-checkout ' +
+    template: '<vue-checkout ' +
         ':getCheckoutUrl="getCheckoutUrl" ' +
         ':updateCheckoutUrl="updateCheckoutUrl" ' +
         ':checkout-available-fulfilment-url="checkoutAvailableFulfilmentUrl" ' +
-        ':create-guest-url="checkoutRequests.createGuest.path" ' +
+        ':create-guest-url="createGuestUrl" ' +
         ':get-basket-url="getBasketUrl" ' +
         ':authToken="authToken" ' +
         ':otacToAuthExchanger="otacToAuthExchanger"' +
         ':locale="locale" ' +
         ':loginUrl="loginUrl" ' +
-        ':getAddressUrl="checkoutRequests.getAddress.path" ' +
+        ':getAddressUrl="getAddressUrl" ' +
         ':placeOrderUrl="placeOrderUrl" ' +
         ':paymentPageUrlPrefix="paymentPageUrlPrefix" ' +
         'applicationName="Storybook" ' +
-        ':getGeoLocationUrl="checkoutRequests.getGeoLocation.path" ' +
-        ':getCustomerUrl="checkoutRequests.getCustomer.path" ' +
-        '/>'
-    }()
+        ':getGeoLocationUrl="getGeoLocationUrl" ' +
+        ':getCustomerUrl="getCustomerUrl" ' +
+        // eslint-disable-next-line no-template-curly-in-string
+        ' :key="`${locale},${getCheckoutUrl},${updateCheckoutUrl},${checkoutAvailableFulfilmentUrl},${authToken},${createGuestUrl},${getBasketUrl},${getAddressUrl},${placeOrderUrl},${paymentPageUrlPrefix},${getGeoLocationUrl}`" />'
 });
 
 CheckoutComponent.storyName = 'f-checkout';
