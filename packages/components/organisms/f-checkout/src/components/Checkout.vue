@@ -567,7 +567,9 @@ export default {
                 ? [this.loadBasket(), this.loadCheckout(), this.loadAvailableFulfilment()]
                 : [this.loadBasket(), this.loadAddressFromLocalStorage(), this.loadAvailableFulfilment()];
 
+            console.log('calling endpounts');
             await Promise.all(promises);
+            console.log('finished endpounts');
 
             this.resetLoadingState();
 

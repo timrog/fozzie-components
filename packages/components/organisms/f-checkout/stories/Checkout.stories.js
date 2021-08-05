@@ -50,7 +50,7 @@ Vue.use(Vuex);
 // const placeOrderUrl = '/place-order.json';
 // const placeOrderDuplicateUrl = '/place-order-duplicate.json';
 // const placeOrderTimeout = '/place-order-timeout.json';
-// const paymentPageUrlPrefix = '#/pay'; // Adding the "#" so we don't get redirect out of the component in Storybook
+const paymentPageUrlPrefix = '#/pay'; // Adding the "#" so we don't get redirect out of the component in Storybook
 // const getGeoLocationUrl = '/get-geo-location.json';
 // const getCustomerUrl = '/get-customer.json';
 
@@ -256,7 +256,15 @@ const checkoutRequests = {
     }
 };
 
-checkoutRequests
+const promises = [];
+Object.keys(checkoutRequests).forEach(request => {
+    promises.push(CheckoutMock.testCheckoutSetup(checkoutRequests[request]));
+});
+
+console.log('storybook call');
+Promise.all(promises);
+console.log('storybook call finished');
+
 // CheckoutMock.testCheckoutSetup(getCheckoutDelivery);
 // CheckoutMock.testCheckoutSetup(getCheckoutDeliveryAsap);
 // CheckoutMock.testCheckoutSetup(getCheckoutDeliveryLater);
@@ -289,7 +297,7 @@ checkoutRequests
 // CheckoutMock.testCheckoutSetup(getGeoLocation);
 // CheckoutMock.testCheckoutSetup(getCustomer);
 
-.CheckoutMock.passThroughAny();
+CheckoutMock.passThroughAny();
 
 const restraurantNotTakingOrders = 'Restaurant Not Taking Orders Issue (Response from server but order not fulfillable)';
 const additionalItemsRequired = 'Additional Items Required Issue (Response from server but order not fulfillable)';
@@ -354,12 +362,13 @@ export const CheckoutComponent = () => ({
     components: { VueCheckout },
     data () {
         return {
-            createGuestUrl,
-            getAddressUrl,
+            checkoutRequests,
+            createGuest: checkoutRequests.createGuest.path,
+            getAddress: checkoutRequests.getAddress.path,
             loginUrl: '/login',
             paymentPageUrlPrefix,
-            getGeoLocationUrl,
-            getCustomerUrl
+            getGeoLocation: checkoutRequests.getGeoLocation.path,
+            getCustomer: checkoutRequests.getCustomer.path
         };
     },
     props: {
@@ -420,18 +429,18 @@ export const CheckoutComponent = () => ({
                 return `/update-checkout-${this.patchCheckoutError}.json`;
             }
 
-            return updateCheckoutUrl;
+            return checkoutRequests.updateCheckout.path;
         },
 
         placeOrderUrl () {
-            return this.placeOrderError ? `/place-order-${this.placeOrderError}.json` : placeOrderUrl;
+            return this.placeOrderError ? `/place-order-${this.placeOrderError}.json` : checkoutRequests.placeOrder.path;
         },
 
         checkoutAvailableFulfilmentUrl () {
             if (this.getCheckoutError === noTimeAvailable) {
-                return checkoutAvailableFulfilmentNoTimeAvailableUrl;
+                return checkoutRequests.checkoutAvailableFulfilmentNoTimeAvailable.path;
             }
-            return this.isAsapAvailable ? checkoutAvailableFulfilmentUrl : checkoutAvailableFulfilmentPreorderUrl;
+            return this.isAsapAvailable ? checkoutRequests.checkoutAvailableFulfilment.path : checkoutRequests.checkoutAvailableFulfilmentPreorder.path;
         }
     },
 
@@ -453,20 +462,20 @@ export const CheckoutComponent = () => ({
         ':getCheckoutUrl="getCheckoutUrl" ' +
         ':updateCheckoutUrl="updateCheckoutUrl" ' +
         ':checkout-available-fulfilment-url="checkoutAvailableFulfilmentUrl" ' +
-        ':create-guest-url="createGuestUrl" ' +
+        ':create-guest-url="checkoutRequests.createGuest.path" ' +
         ':get-basket-url="getBasketUrl" ' +
         ':authToken="authToken" ' +
         ':otacToAuthExchanger="otacToAuthExchanger"' +
         ':locale="locale" ' +
         ':loginUrl="loginUrl" ' +
-        ':getAddressUrl="getAddressUrl" ' +
+        ':getAddressUrl="checkoutRequests.getAddress.path" ' +
         ':placeOrderUrl="placeOrderUrl" ' +
         ':paymentPageUrlPrefix="paymentPageUrlPrefix" ' +
         'applicationName="Storybook" ' +
-        ':getGeoLocationUrl="getGeoLocationUrl" ' +
-        ':getCustomerUrl="getCustomerUrl" ' +
+        ':getGeoLocationUrl="checkoutRequests.getGeoLocation.path" ' +
+        ':getCustomerUrl="checkoutRequests.getCustomer.path" ' +
         // eslint-disable-next-line no-template-curly-in-string
-        ' :key="`${locale},${getCheckoutUrl},${updateCheckoutUrl},${checkoutAvailableFulfilmentUrl},${authToken},${createGuestUrl},${getBasketUrl},${getAddressUrl},${placeOrderUrl},${paymentPageUrlPrefix},${getGeoLocationUrl}`" />'
+        ' :key="`${locale},${getCheckoutUrl},${updateCheckoutUrl},${checkoutAvailableFulfilmentUrl},${authToken},${checkoutRequests.createGuest.path},${getBasketUrl},${checkoutRequests.getAddress.path},${placeOrderUrl},${paymentPageUrlPrefix},${checkoutRequests.getGeoLocation.path}`" />'
 });
 
 CheckoutComponent.storyName = 'f-checkout';

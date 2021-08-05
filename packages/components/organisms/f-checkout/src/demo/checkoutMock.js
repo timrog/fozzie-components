@@ -32,26 +32,27 @@ import getCustomer from './get-customer.json';
 const mock = new MockAdapter(axios);
 
 export default {
-    async testCheckoutSetup (path, method, response) {
-        if (response === 'timeout') {
+    async testCheckoutSetup ({path, method, status}) {
+        if (status === 'timeout') {
             switch (method) {
                 case 'get':
                     mock.onGet(path).timeout();
-                    return;
+                    break;
                 case 'post':
                     mock.onGet(path).timeout();
-                    return;
+                    break;
             }
+            return;
         }
 
-        const payload = await import(`.${path}.json`);
+        const payload = await import(`.${path}`);
 
         switch (method) {
             case 'get':
-                mock.onGet(path).reply(response, payload);
+                mock.onGet(path).reply(status, payload);
                 return;
             case 'post':
-                mock.onGet(path).reply(response, payload);
+                mock.onGet(path).reply(status, payload);
                 return;
         }
     },
