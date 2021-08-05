@@ -20,72 +20,276 @@ export default {
 
 Vue.use(Vuex);
 
-const getCheckoutDeliveryUrl = '/checkout-delivery.json';
-const getCheckoutDeliveryAsapUrl = '/checkout-delivery-user-selected-asap.json';
-const getCheckoutDeliveryLaterUrl = '/checkout-delivery-user-selected-later.json';
-const getCheckoutDeliveryUnavailableUrl = '/checkout-delivery-user-selected-unavailable-time.json';
-const getCheckoutCollectionUrl = '/checkout-collection.json';
-const getCheckoutCollectionAsapUrl = '/checkout-collection-user-selected-asap.json';
-const getCheckoutCollectionLaterUrl = '/checkout-collection-user-selected-later.json';
-const getCheckoutDineInUrl = '/checkout-dinein.json';
-const getCheckoutTimeoutUrl = '/checkout-timeout-get-error.json';
-const getCheckoutAccessForbiddenUrl = '/checkout-403-get-error.json';
-const getCheckoutErrorUrl = '/checkout-500-get-error.json';
-const checkoutAvailableFulfilmentUrl = '/checkout-available-fulfilment.json';
-const checkoutAvailableFulfilmentNoTimeAvailableUrl = '/checkout-available-fulfilment-no-time-available.json';
-const checkoutAvailableFulfilmentPreorderUrl = '/checkout-available-fulfilment-preorder.json';
-const createGuestUrl = '/create-guest.json';
-const getBasketDeliveryUrl = '/get-basket-delivery.json';
-const getBasketCollectionUrl = '/get-basket-collection.json';
-const getBasketDineInUrl = '/get-basket-dinein.json';
-const getBasketTimeoutUrl = '/get-basket-timeout.json';
-const updateCheckoutUrl = '/update-checkout.json';
-const updateCheckoutRestaurantNotTakingOrdersUrl = '/update-checkout-restaurant-not-taking-orders.json';
-const updateCheckoutAdditionalItemsRequiredUrl = '/update-checkout-additional-items-required.json';
-const updateCheckoutAccessForbiddenUrl = '/update-checkout-403.json';
-const updateCheckoutUnavailableTimeUrl = '/update-checkout-time-unavailable.json';
-const updateCheckoutTimeoutUrl = '/update-checkout-timeout.json';
-const getAddressUrl = '/get-address.json';
-const placeOrderUrl = '/place-order.json';
-const placeOrderDuplicateUrl = '/place-order-duplicate.json';
-const placeOrderTimeout = '/place-order-timeout.json';
-const paymentPageUrlPrefix = '#/pay'; // Adding the "#" so we don't get redirect out of the component in Storybook
-const getGeoLocationUrl = '/get-geo-location.json';
-const getCustomerUrl = '/get-customer.json';
+// const getCheckoutDeliveryUrl = '/checkout-delivery.json';
+// const getCheckoutDeliveryAsapUrl = '/checkout-delivery-user-selected-asap.json';
+// const getCheckoutDeliveryLaterUrl = '/checkout-delivery-user-selected-later.json';
+// const getCheckoutDeliveryUnavailableUrl = '/checkout-delivery-user-selected-unavailable-time.json';
+// const getCheckoutCollectionUrl = '/checkout-collection.json';
+// const getCheckoutCollectionAsapUrl = '/checkout-collection-user-selected-asap.json';
+// const getCheckoutCollectionLaterUrl = '/checkout-collection-user-selected-later.json';
+// const getCheckoutDineInUrl = '/checkout-dinein.json';
+// const getCheckoutTimeoutUrl = '/checkout-timeout-get-error.json';
+// const getCheckoutAccessForbiddenUrl = '/checkout-403-get-error.json';
+// const getCheckoutErrorUrl = '/checkout-500-get-error.json';
+// const checkoutAvailableFulfilmentUrl = '/checkout-available-fulfilment.json';
+// const checkoutAvailableFulfilmentNoTimeAvailableUrl = '/checkout-available-fulfilment-no-time-available.json';
+// const checkoutAvailableFulfilmentPreorderUrl = '/checkout-available-fulfilment-preorder.json';
+// const createGuestUrl = '/create-guest.json';
 
-CheckoutMock.setupCheckoutMethod(getCheckoutDeliveryUrl);
-CheckoutMock.setupCheckoutMethod(getCheckoutDeliveryAsapUrl);
-CheckoutMock.setupCheckoutMethod(getCheckoutDeliveryLaterUrl);
-CheckoutMock.setupCheckoutMethod(getCheckoutDeliveryUnavailableUrl);
-CheckoutMock.setupCheckoutMethod(getCheckoutCollectionUrl);
-CheckoutMock.setupCheckoutMethod(getCheckoutCollectionAsapUrl);
-CheckoutMock.setupCheckoutMethod(getCheckoutCollectionLaterUrl);
-CheckoutMock.setupCheckoutMethod(getCheckoutDineInUrl);
-CheckoutMock.setupCheckoutMethod(getCheckoutTimeoutUrl);
-CheckoutMock.setupCheckoutMethod(checkoutAvailableFulfilmentUrl);
-CheckoutMock.setupCheckoutMethod(checkoutAvailableFulfilmentNoTimeAvailableUrl);
-CheckoutMock.setupCheckoutMethod(checkoutAvailableFulfilmentPreorderUrl);
-CheckoutMock.setupCheckoutMethod(createGuestUrl);
-CheckoutMock.setupCheckoutMethod(getBasketDeliveryUrl);
-CheckoutMock.setupCheckoutMethod(getBasketCollectionUrl);
-CheckoutMock.setupCheckoutMethod(getBasketDineInUrl);
-CheckoutMock.setupCheckoutMethod(getBasketTimeoutUrl);
-CheckoutMock.setupCheckoutMethod(updateCheckoutUrl);
-CheckoutMock.setupCheckoutMethod(updateCheckoutRestaurantNotTakingOrdersUrl);
-CheckoutMock.setupCheckoutMethod(updateCheckoutAdditionalItemsRequiredUrl);
-CheckoutMock.setupCheckoutMethod(updateCheckoutAccessForbiddenUrl);
-CheckoutMock.setupCheckoutMethod(updateCheckoutUnavailableTimeUrl);
-CheckoutMock.setupCheckoutMethod(updateCheckoutTimeoutUrl);
-CheckoutMock.setupCheckoutMethod(getAddressUrl);
-CheckoutMock.setupCheckoutMethod(placeOrderUrl);
-CheckoutMock.setupCheckoutMethod(placeOrderDuplicateUrl);
-CheckoutMock.setupCheckoutMethod(placeOrderTimeout);
-CheckoutMock.setupCheckoutMethod(getCheckoutAccessForbiddenUrl);
-CheckoutMock.setupCheckoutMethod(getCheckoutErrorUrl);
-CheckoutMock.setupCheckoutMethod(getGeoLocationUrl);
-CheckoutMock.setupCheckoutMethod(getCustomerUrl);
+// const getBasketDeliveryUrl = '/get-basket-delivery.json';
+// const getBasketCollectionUrl = '/get-basket-collection.json';
+// const getBasketDineInUrl = '/get-basket-dinein.json';
+// const getBasketTimeoutUrl = '/get-basket-timeout.json';
+// const updateCheckoutUrl = '/update-checkout.json';
+// const updateCheckoutRestaurantNotTakingOrdersUrl = '/update-checkout-restaurant-not-taking-orders.json';
+// const updateCheckoutAdditionalItemsRequiredUrl = '/update-checkout-additional-items-required.json';
+// const updateCheckoutAccessForbiddenUrl = '/update-checkout-403.json';
+// const updateCheckoutUnavailableTimeUrl = '/update-checkout-time-unavailable.json';
+// const updateCheckoutTimeoutUrl = '/update-checkout-timeout.json';
+// const getAddressUrl = '/get-address.json';
+// const placeOrderUrl = '/place-order.json';
+// const placeOrderDuplicateUrl = '/place-order-duplicate.json';
+// const placeOrderTimeout = '/place-order-timeout.json';
+// const paymentPageUrlPrefix = '#/pay'; // Adding the "#" so we don't get redirect out of the component in Storybook
+// const getGeoLocationUrl = '/get-geo-location.json';
+// const getCustomerUrl = '/get-customer.json';
 
-CheckoutMock.passThroughAny();
+// CheckoutMock.setupCheckoutMethod(getCheckoutDeliveryUrl);
+// CheckoutMock.setupCheckoutMethod(getCheckoutDeliveryAsapUrl);
+// CheckoutMock.setupCheckoutMethod(getCheckoutDeliveryLaterUrl);
+// CheckoutMock.setupCheckoutMethod(getCheckoutDeliveryUnavailableUrl);
+// CheckoutMock.setupCheckoutMethod(getCheckoutCollectionUrl);
+// CheckoutMock.setupCheckoutMethod(getCheckoutCollectionAsapUrl);
+// CheckoutMock.setupCheckoutMethod(getCheckoutCollectionLaterUrl);
+// CheckoutMock.setupCheckoutMethod(getCheckoutDineInUrl);
+// CheckoutMock.setupCheckoutMethod(getCheckoutTimeoutUrl);
+// CheckoutMock.setupCheckoutMethod(checkoutAvailableFulfilmentUrl);
+// CheckoutMock.setupCheckoutMethod(checkoutAvailableFulfilmentNoTimeAvailableUrl);
+// CheckoutMock.setupCheckoutMethod(checkoutAvailableFulfilmentPreorderUrl);
+// CheckoutMock.setupCheckoutMethod(createGuestUrl);
+// CheckoutMock.setupCheckoutMethod(getBasketDeliveryUrl);
+// CheckoutMock.setupCheckoutMethod(getBasketCollectionUrl);
+// CheckoutMock.setupCheckoutMethod(getBasketDineInUrl);
+// CheckoutMock.setupCheckoutMethod(getBasketTimeoutUrl);
+// CheckoutMock.setupCheckoutMethod(updateCheckoutUrl);
+// CheckoutMock.setupCheckoutMethod(updateCheckoutRestaurantNotTakingOrdersUrl);
+// CheckoutMock.setupCheckoutMethod(updateCheckoutAdditionalItemsRequiredUrl);
+// CheckoutMock.setupCheckoutMethod(updateCheckoutAccessForbiddenUrl);
+// CheckoutMock.setupCheckoutMethod(updateCheckoutUnavailableTimeUrl);
+// CheckoutMock.setupCheckoutMethod(updateCheckoutTimeoutUrl);
+// CheckoutMock.setupCheckoutMethod(getAddressUrl);
+// CheckoutMock.setupCheckoutMethod(placeOrderUrl);
+// CheckoutMock.setupCheckoutMethod(placeOrderDuplicateUrl);
+// CheckoutMock.setupCheckoutMethod(placeOrderTimeout);
+// CheckoutMock.setupCheckoutMethod(getCheckoutAccessForbiddenUrl);
+// CheckoutMock.setupCheckoutMethod(getCheckoutErrorUrl);
+// CheckoutMock.setupCheckoutMethod(getGeoLocationUrl);
+// CheckoutMock.setupCheckoutMethod(getCustomerUrl);
+const methods = {
+    get: 'get',
+    post: 'post',
+    patch: 'patch'
+};
+
+const responses = {
+    ok: 200,
+    forbidden: 403,
+    serverError: 500,
+    timeout: 'timeout'
+};
+
+const checkoutRequests = {
+    getCheckoutDelivery: {
+        path: '/checkout-delivery.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getCheckoutDeliveryAsap: {
+        path: '/checkout-delivery-user-selected-asap.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getCheckoutDeliveryLater: {
+        path: '/checkout-delivery-user-selected-later.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getCheckoutDeliveryUnavailable: {
+        path: '/checkout-delivery-user-selected-unavailable-time.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getCheckoutCollection: {
+        path: '/checkout-collection.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getCheckoutCollectionAsap: {
+        path: '/checkout-collection-user-selected-asap.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getCheckoutCollectionLater: {
+        path: '/checkout-collection-user-selected-later.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getCheckoutDineIn: {
+        path: '/checkout-dinein.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getCheckoutTimeout: {
+        path: '/checkout-timeout-get-error.json',
+        method: methods.get,
+        status: responses.timeout
+    },
+    getCheckoutAccessForbidden: {
+        path: '/checkout-403-get-error.json',
+        method: methods.get,
+        status: responses.forbidden
+    },
+    getCheckoutError: {
+        path: '/checkout-500-get-error.json',
+        method: methods.get,
+        status: responses.serverError
+    },
+    checkoutAvailableFulfilment: {
+        path: '/checkout-available-fulfilment.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    checkoutAvailableFulfilmentNoTimeAvailable: {
+        path: '/checkout-available-fulfilment-no-time-available.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    checkoutAvailableFulfilmentPreorder: {
+        path: '/checkout-available-fulfilment-preorder.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    createGuest: {
+        path: '/create-guest.json',
+        method: methods.get,
+        status: responses.timeout
+    },
+    getBasketDelivery: {
+        path: '/get-basket-delivery.json',
+        method: methods.get,
+        status: responses.forbidden
+    },
+    getBasketCollection: {
+        path: '/get-basket-collection.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getBasketDineIn: {
+        path: '/get-basket-dinein.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getBasketTimeout: {
+        path: '/get-basket-timeout.json',
+        method: methods.get,
+        status: responses.timeout
+    },
+    updateCheckout: {
+        path: '/update-checkout.json',
+        method: methods.patch,
+        status: responses.ok
+    },
+    updateCheckoutRestaurantNotTakingOrders: {
+        path: '/update-checkout-restaurant-not-taking-orders.json',
+        method: methods.patch,
+        status: responses.ok
+    },
+    updateCheckoutAdditionalItemsRequired: {
+        path: '/update-checkout-additional-items-required.json',
+        method: methods.patch,
+        status: responses.ok
+    },
+    updateCheckoutAccessForbidden: {
+        path: '/update-checkout-403.json',
+        method: methods.patch,
+        status: responses.forbidden
+    },
+    updateCheckoutUnavailableTime: {
+        path: '/update-checkout-time-unavailable.json',
+        method: methods.patch,
+        status: responses.ok
+    },
+    updateCheckoutTimeout: {
+        path: '/update-checkout-timeout.json',
+        method: methods.patch,
+        status: responses.timeout
+    },
+    getAddress: {
+        path: '/get-address.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    placeOrder: {
+        path: '/place-order.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    placeOrderDuplicate: {
+        path: '/place-order-duplicate.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    placeOrderTimeout: {
+        path: '/place-order-timeout.json',
+        method: methods.get,
+        status: responses.timeout
+    },
+    getGeoLocation: {
+        path: '/get-geo-location.json',
+        method: methods.get,
+        status: responses.ok
+    },
+    getCustomer: {
+        path: '/get-customer.json',
+        method: methods.get,
+        status: responses.ok
+    }
+};
+
+checkoutRequests
+// CheckoutMock.testCheckoutSetup(getCheckoutDelivery);
+// CheckoutMock.testCheckoutSetup(getCheckoutDeliveryAsap);
+// CheckoutMock.testCheckoutSetup(getCheckoutDeliveryLater);
+// CheckoutMock.testCheckoutSetup(getCheckoutDeliveryUnavailable);
+// CheckoutMock.testCheckoutSetup(getCheckoutCollection);
+// CheckoutMock.testCheckoutSetup(getCheckoutCollectionAsap);
+// CheckoutMock.testCheckoutSetup(getCheckoutCollectionLater);
+// CheckoutMock.testCheckoutSetup(getCheckoutDineIn);
+// CheckoutMock.testCheckoutSetup(getCheckoutTimeout);
+// CheckoutMock.testCheckoutSetup(checkoutAvailableFulfilment);
+// CheckoutMock.testCheckoutSetup(checkoutAvailableFulfilmentNoTimeAvailable);
+// CheckoutMock.testCheckoutSetup(checkoutAvailableFulfilmentPreorder);
+// CheckoutMock.testCheckoutSetup(createGuest);
+// CheckoutMock.testCheckoutSetup(getBasketDelivery);
+// CheckoutMock.testCheckoutSetup(getBasketCollection);
+// CheckoutMock.testCheckoutSetup(getBasketDineIn);
+// CheckoutMock.testCheckoutSetup(getBasketTimeout);
+// CheckoutMock.testCheckoutSetup(updateCheckout);
+// CheckoutMock.testCheckoutSetup(updateCheckoutRestaurantNotTakingOrders);
+// CheckoutMock.testCheckoutSetup(updateCheckoutAdditionalItemsRequired);
+// CheckoutMock.testCheckoutSetup(updateCheckoutAccessForbidden);
+// CheckoutMock.testCheckoutSetup(updateCheckoutUnavailableTime);
+// CheckoutMock.testCheckoutSetup(updateCheckoutTimeout);
+// CheckoutMock.testCheckoutSetup(getAddress);
+// CheckoutMock.testCheckoutSetup(placeOrder);
+// CheckoutMock.testCheckoutSetup(placeOrderDuplicate);
+// CheckoutMock.testCheckoutSetup(placeOrderTimeout);
+// CheckoutMock.testCheckoutSetup(getCheckoutAccessForbidden);
+// CheckoutMock.testCheckoutSetup(getCheckoutError);
+// CheckoutMock.testCheckoutSetup(getGeoLocation);
+// CheckoutMock.testCheckoutSetup(getCustomer);
+
+.CheckoutMock.passThroughAny();
 
 const restraurantNotTakingOrders = 'Restaurant Not Taking Orders Issue (Response from server but order not fulfillable)';
 const additionalItemsRequired = 'Additional Items Required Issue (Response from server but order not fulfillable)';
