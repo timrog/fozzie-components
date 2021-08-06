@@ -56,11 +56,7 @@ const urls = {
     getCustomerUrl: '/get-customer.json'
 };
 
-for (let [,value] of Object.entries(urls)) {
-    CheckoutMock.setupCheckoutMethod(value);
-}
-
-CheckoutMock.passThroughAny();
+CheckoutMock(urls);
 
 const restraurantNotTakingOrders = 'Restaurant Not Taking Orders Issue (Response from server but order not fulfillable)';
 const additionalItemsRequired = 'Additional Items Required Issue (Response from server but order not fulfillable)';
@@ -119,6 +115,7 @@ export const CheckoutComponent = () => ({
     components: { VueCheckout },
     data () {
         return {
+            urls,
             createGuestUrl: urls.createGuestUrl,
             getAddressUrl: urls.getAddressUrl,
             loginUrl: '/login',
@@ -194,7 +191,7 @@ export const CheckoutComponent = () => ({
 
         checkoutAvailableFulfilmentUrl () {
             if (this.getCheckoutError === noTimeAvailable) {
-                return checkoutAvailableFulfilmentNoTimeAvailableUrl;
+                return urls.checkoutAvailableFulfilmentNoTimeAvailableUrl;
             }
             return this.isAsapAvailable ? urls.checkoutAvailableFulfilmentUrl : urls.checkoutAvailableFulfilmentPreorderUrl;
         }
