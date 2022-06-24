@@ -1,0 +1,64 @@
+{
+  "name": "@justeat/f-toggle",
+  "description": "Fozzie Toggle - Toggle switch facade over a checkbox",
+  "version": "0.1.0",
+  "main": "dist/f-toggle.umd.min.js",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/justeat/fozzie-components/tree/master/packages/components/atoms/f-toggle",
+  "contributors": [
+    "Github contributors <https://github.com/justeat/fozzie-components/graphs/contributors>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:justeat/fozzie-components.git"
+  },
+  "bugs": {
+    "url": "https://github.com/justeat/fozzie-components/issues"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "keywords": [
+    "fozzie"
+  ],
+  "scripts": {
+    "prepublishOnly": "yarn lint && yarn test && yarn build",
+    "build": "vue-cli-service build --target lib --name f-toggle ./src/index.js",
+    "lint": "eslint \"!(dist)/**/*.{js,vue}\"",
+    "lint:fix": "yarn lint --fix",
+    "lint:style": "vue-cli-service lint:style",
+    "test": "vue-cli-service test:unit",
+    "test-a11y:chrome": "cross-env-shell TEST_TYPE=a11y wdio ../../../../wdio-chrome.conf.js"
+  },
+  "browserslist": [
+    "extends @justeat/browserslist-config-fozzie"
+  ],
+  "dependencies": {
+    "@justeat/f-services": "1.7.0",
+    "@justeat/fozzie-colour-palette": "^3.1.0",
+    "vue-demi": "^0.12.5"
+  },
+  "peerDependencies": {
+    "@justeat/browserslist-config-fozzie": ">=1.2.0",
+    "@vue/composition-api": "^1.5.0"
+  },
+  "peerDependenciesMeta": {
+    "@vue/composition-api": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@justeat/f-wdio-utils": "0.5.0",
+    "@samhammer/vue-cli-plugin-stylelint": "2.1.0",
+    "@vue/cli-plugin-babel": "4.5.15",
+    "@vue/cli-plugin-unit-jest": "4.5.15",
+    "@vue/composition-api": "^1.6.1",
+    "@vue/test-utils": "1.2.2"
+  }
+}

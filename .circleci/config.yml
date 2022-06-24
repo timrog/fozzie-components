@@ -104,6 +104,7 @@ commands:
             - packages/components/atoms/f-spinner/dist
             - packages/components/atoms/f-error-boundary/dist
             - packages/components/atoms/f-filter-pill/dist
+            - packages/components/atoms/f-toggle/dist
 
       - save_cache:
           name: Cache for organisms
@@ -370,7 +371,6 @@ executors:
     resource_class: large
 
 jobs:
-
   working_directory: ~/repo
 
   install:
@@ -382,7 +382,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - '*'
+            - "*"
       - slack_notify_fail
       - slack_notify_success
 
@@ -392,8 +392,8 @@ jobs:
       - attach_workspace:
           at: .
       - run: # Run PR Checks
-         name: Run PR Checks
-         command: yarn danger ci --failOnErrors
+          name: Run PR Checks
+          command: yarn danger ci --failOnErrors
       - slack_notify_fail
       - slack_notify_success
 
@@ -410,7 +410,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - '*'
+            - "*"
       - lint_packages
       - slack_notify_fail
       - slack_notify_success
@@ -421,8 +421,8 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-         name: Run Bundlewatch checks
-         command: yarn bundlewatch
+          name: Run Bundlewatch checks
+          command: yarn bundlewatch
       - slack_notify_fail
       - slack_notify_success
 
@@ -508,13 +508,13 @@ workflows:
           context: web-core
           filters:
             branches:
-              ignore: [ 'gh-pages' ]
+              ignore: ["gh-pages"]
       - danger-checks:
           name: danger-checks
           context: web-core
           filters:
             branches:
-              ignore: ['gh-pages']
+              ignore: ["gh-pages"]
           requires:
             - install
       - build:
@@ -522,7 +522,7 @@ workflows:
           context: web-core
           filters:
             branches:
-              ignore: ['gh-pages']
+              ignore: ["gh-pages"]
           requires:
             - danger-checks
       - bundlewatch:
@@ -530,27 +530,36 @@ workflows:
           context: web-core
           filters:
             branches:
-              ignore: ['gh-pages']
+              ignore: ["gh-pages"]
           requires:
             - build
       - unit-tests:
           matrix:
             parameters:
-              component_type: ['tools', 'services', 'atoms', 'molecules', 'organisms', 'pages', 'templates']
+              component_type:
+                [
+                  "tools",
+                  "services",
+                  "atoms",
+                  "molecules",
+                  "organisms",
+                  "pages",
+                  "templates",
+                ]
           context: web-core
           filters:
             branches:
-              ignore: ['gh-pages']
+              ignore: ["gh-pages"]
           requires:
             - build
       - browser-tests:
           matrix:
             parameters:
-              component_type: ['atoms', 'molecules', 'organisms', 'pages']
+              component_type: ["atoms", "molecules", "organisms", "pages"]
           context: web-core
           filters:
             branches:
-              ignore: ['gh-pages']
+              ignore: ["gh-pages"]
           requires:
             - unit-tests-<< matrix.component_type >>
       - publish-to-npm:
